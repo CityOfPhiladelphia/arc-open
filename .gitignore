@@ -1,0 +1,4 @@
+*.sublime-*
+data
+*.zip
+*.pyc
