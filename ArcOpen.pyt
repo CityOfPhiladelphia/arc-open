@@ -165,7 +165,7 @@ class Convert(object):
             except:
                 pass
         if debug:
-            messages.addMessage('Fields that must be deleted from output:')
+            messages.addMessage('Fields that must be deleted:')
             messages.addMessage(to_delete)
         field_info = ''
         for field in to_delete:
@@ -185,7 +185,7 @@ class Convert(object):
         try:
             arcpy.Delete_management('temp_layer')
         except:
-            messages.addMessage('Unable to delete in_memory feature class')
+            messages.addErrorMessage('Unable to delete in_memory feature class')
 
         messages.addMessage('Compressing the shapefile to a .zip file...')
         zip = Export.ZIP(shp_output_path, output_name).generate()
@@ -217,19 +217,20 @@ class Convert(object):
             if debug:
                 messages.addMessage('ArcGIS install directory: ' + install_dir)
             translator = install_dir + 'Metadata\\Translator\\ARCGIS2FGDC.xml'
-            if (debug):
+            if debug:
                 messages.addMessage('Using the XML translator at ' + translator)
             output = shp_output_path + '\\temp\\' + 'README.xml'
             arcpy.ESRITranslator_conversion(shapefile, translator, output)
             attributes = [i.name for i in arcpy.ListFields(shapefile)]
-            md = Metadata.Markdown(output, attributes).generate()
-            md_file = open(output_dir + '\\README.md', 'w')
-            messages.addMessage('Open output markdown file: ' + str(md_file))
             try:
+                md = Metadata.Markdown(output, attributes).generate()
+                md_file = open(output_dir + '\\README.md', 'w')
+                if debug:
+                    messages.addMessage('Open output markdown file: ' + str(md_file))
                 md_file.write(md)
                 messages.addMessage('Finished creating .md file')
             except Exception as err:
-                messages.addMessage('Error creating Markdown metadata file: ' + str(err))
+                messages.addErrorMessage('Error creating Markdown metadata file: ' + str(err))
             finally:
                 md_file.close()
 
