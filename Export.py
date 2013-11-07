@@ -1,4 +1,4 @@
-from arcpy import AddMessage, AddErrorMessage
+from arcpy import AddMessage
 import arcpy, csv, os, zipfile, glob, copy
 from xml.dom.minidom import parse
 
@@ -41,7 +41,7 @@ class CSV:
                 return False
 
         except Exception as err:
-            AddErrorMessage('Unable to export CSV file: ' + str(err))
+            AddMessage('Unable to export CSV file: ' + str(err))
             return False
 
 
@@ -86,7 +86,7 @@ class KMZ:
             arcpy.LayerToKML_conversion(self.name, self.output, '', '', self.name, '1024', '96', 'CLAMPED_TO_GROUND')
             return True
         except Exception as err:
-            AddErrorMessage('Unable to export KMZ file: ' + str(err))
+            AddMessage('Unable to export KMZ file: ' + str(err))
             return False
 
 class Markdown:
