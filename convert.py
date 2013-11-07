@@ -146,13 +146,8 @@ class Convert(object):
 
         all_fields = [i.name for i in arcpy.ListFields(fc)]
         to_delete = [x for x in all_fields if x not in set(fields)]
-        # TODO: Refactor this - should be able to remove the below attrbutes from a list more elegantly
-        to_not_delete = ['OBJECTID', 'SHAPE']
-        for field in to_not_delete:
-            try:
-                to_delete.remove(field)
-            except:
-                pass
+        req_fields = ['OBJECTID', 'SHAPE']
+        to_delete = filter(lambda x: x not in req_fields, to_delete)
         if debug:
             messages.addMessage('Fields that must be deleted:')
             messages.addMessage(to_delete)
