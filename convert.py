@@ -21,11 +21,9 @@ class Convert(object):
             name = 'in_fields',
             displayName = 'In Fields',
             direction = 'Input',
-            datatype = 'Field',
-            parameterType = 'Required',
-            multiValue = True)
+            datatype = 'GPFieldInfo',
+            parameterType = 'Required')
 
-        field_mappings.filter.list = ['Short', 'Long', 'Float', 'Single', 'Double', 'Text', 'Date', 'String']
         field_mappings.parameterDependencies = [feature_class.name]
 
         output_dir = arcpy.Parameter(
@@ -92,14 +90,16 @@ class Convert(object):
         return True
 
     def updateParameters(self, parameters):
-        fc_type = arcpy.Describe(parameters[0].valueAsText).shapeType
-        if fc_type in ['Point', 'MultiPoint']:
-            parameters[7].enabled = 1
-        else:
-            parameters[7].enabled = 0
+        if parameters[0].valueAsText:
+            fc_type = arcpy.Describe(parameters[0].valueAsText).shapeType
+            if fc_type in ['Point', 'MultiPoint']:
+                parameters[7].enabled = 1
+            else:
+                parameters[7].enabled = 0
 
     def execute(self, parameters, messages):
         fc = parameters[0].valueAsText
+        field_mappings = parameters[1].valueAsText
         fields = parameters[1].valueAsText.split(';')
         fields.append('SHAPE@XY')
         output_dir = parameters[2].valueAsText
@@ -118,8 +118,8 @@ class Convert(object):
         temp_shapefile = shp_output_path + '\\temp\\' + output_name + '.shp'
 
         if debug:
-            messages.addMessage('Fields selected:')
-            messages.addMessage(fields)
+            messages.addMessage('Field infos:')
+            messages.addMessage(field_mappings)
 
         try:
             arcpy.Delete_management('temp_layer')
@@ -144,18 +144,7 @@ class Convert(object):
                     messages.addWarningMessage('Unable to delete ' + file + 'from the temp folder. This may become a problem later')
                     pass
 
-        all_fields = [i.name for i in arcpy.ListFields(fc)]
-        to_delete = [x for x in all_fields if x not in set(fields)]
-        req_fields = ['OBJECTID', 'SHAPE']
-        to_delete = filter(lambda x: x not in req_fields, to_delete)
-        if debug:
-            messages.addMessage('Fields that must be deleted:')
-            messages.addMessage(to_delete)
-        field_info = ''
-        for field in to_delete:
-            field_info = field_info + ''.join([field, ' ', field, ' ', 'HIDDEN ', 'NONE; '])
-
-        arcpy.MakeFeatureLayer_management(fc, 'temp_layer', '', '', field_info)
+        arcpy.MakeFeatureLayer_management(fc, 'temp_layer', '', '', field_mappings)
         arcpy.CopyFeatures_management('temp_layer', temp_shapefile)
 
         if convert_to_wgs84:
