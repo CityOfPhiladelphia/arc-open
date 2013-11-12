@@ -1,5 +1,5 @@
 import arcpy, os, shutil
-from export import CSV, KMZ, ZIP, Markdown
+from export import Export
 from esri2open import esri2open
 
 
@@ -161,51 +161,37 @@ class Convert(object):
             messages.addErrorMessage('Unable to delete in_memory feature class')
 
         messages.addMessage('Compressing the shapefile to a .zip file...')
-        zip = ZIP(shp_output_path, output_name).generate()
+
+        export = Export(output_dir, output_name, debug)
+
+        zip = export.zip()
         if zip:
-            messages.addMessage('Finished creating .zip file')
+            messages.addMessage('Finished creating ZIP archive')
 
         if convert_to_geojson:
             messages.addMessage('Converting to GeoJSON...')
             output = output_path + '.geojson'
             geojson = esri2open.toOpen(shapefile, output, includeGeometry='geojson')
             if geojson:
-                messages.addMessage('Finished creating .geojson file')
+                messages.addMessage('Finished converting to GeoJSON')
 
         if convert_to_kmz:
             messages.addMessage('Converting to KML...')
-            kmz = KMZ(output_name, shapefile, output_path).generate()
+            kmz = export.kmz()
             if kmz:
-                messages.addMessage('Finished creating KMZ file')
+                messages.addMessage('Finished converting to KMZ')
 
         if convert_to_csv:
             messages.addMessage('Converting to CSV...')
-            csv_file = CSV(output_path, shapefile).generate()
-            if csv_file:
-                messages.addMessage('Finished creating .csv file')
+            csv = export.csv()
+            if csv:
+                messages.addMessage('Finished converting to CSV')
 
         if convert_metadata:
             messages.addMessage('Converting metadata to Markdown README.md file...')
-            install_dir = arcpy.GetInstallInfo('desktop')['InstallDir']
-            if debug:
-                messages.addMessage('ArcGIS install directory: ' + install_dir)
-            translator = install_dir + 'Metadata\\Translator\\ARCGIS2FGDC.xml'
-            if debug:
-                messages.addMessage('Using the XML translator at ' + translator)
-            output = shp_output_path + '\\temp\\' + 'README.xml'
-            arcpy.ESRITranslator_conversion(shapefile, translator, output)
-            attributes = [i.name for i in arcpy.ListFields(shapefile)]
-            try:
-                md = Markdown(output, attributes).generate()
-                md_file = open(output_dir + '\\README.md', 'w')
-                if debug:
-                    messages.addMessage('Open output markdown file: ' + str(md_file))
-                md_file.write(md)
-                messages.addMessage('Finished creating .md file')
-            except Exception as err:
-                messages.addErrorMessage('Error creating Markdown metadata file: ' + str(err))
-            finally:
-                md_file.close()
+            md = export.md()
+            if md:
+            		messages.addMessage('Finished converting metadata to Markdown README.md file')
 
         # Delete the /temp directory because we're done with it
         shutil.rmtree(shp_output_path + '\\temp')
