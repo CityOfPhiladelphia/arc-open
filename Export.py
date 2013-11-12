@@ -96,9 +96,7 @@ class Export:
 
     def kmz(self):
         kmz_file = self.full_path + '.kmz'
-        print 'KMZ path: ' + kmz_file
         arcpy.MakeFeatureLayer_management(self.shapefile, self.output_name)
-        print 'Feature layer made: ' + self.output_name
         if arcpy.Exists(kmz_file):
             arcpy.Delete_management(kmz_file)
         try:
@@ -126,7 +124,10 @@ class Export:
         self.source = self._load(metadata)
         metadata_fields = copy.deepcopy(self.fields)
         AddMessage(metadata_fields)
-        metadata_fields.remove('SHAPE@XY')
+        try:
+            metadata_fields.remove('SHAPE@XY')
+        except:
+            pass
         AddMessage(metadata_fields)
         self.markdown = ''
 
