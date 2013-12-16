@@ -107,6 +107,22 @@ class Convert(object):
 
         return
 
+    def checkFieldMappings(self, param):
+        field_mappings = param.value
+        over_fields = []
+        for idx, val in enumerate(range(field_mappings.count)):
+            if field_mappings.getVisible(idx) == 'VISIBLE':
+                field = field_mappings.getNewName(idx)
+                if len(field) > 10:
+                    over_fields.append(field)
+        if over_fields:
+            param.setWarningMessage('The following visible field name(s) are' +
+                                    ' over 10 characters and will be ' +
+                                    'shortened automatically by ArcGIS: ' +
+                                    ", ".join(over_fields))
+        else:
+            param.clearMessage()
+
     def updateMessages(self, params):
 
         if params[2].value and params[2].altered:
@@ -119,8 +135,15 @@ class Convert(object):
                                               'created shapefile.')
                 else:
                     params[3].clearMessage()
-        return
 
+        # Throws a warning, not an error, if there is one or more visible
+        # output column names longer than 10 characters. ArcGIS will abbreviate
+        # these columns if they aren't changed or hidden. This behavior may be
+        # ok with the user, thus why we are only warning.
+        if params[1].value:
+            self.checkFieldMappings(params[1])
+
+        return
 
     def execute(self, parameters, messages):
         fc = parameters[0].valueAsText
