@@ -67,12 +67,14 @@ class Export:
                         pass
                     headers = copy.deepcopy(self.fields)
                     self.fields.append('SHAPE@XY')
-                    headers.extend(['LNG', 'LAT'])
+                    headers.extend(['LAT', 'LNG'])
                     writer.writerow(headers)
                     cur = arcpy.SearchCursor(self.shapefile)
                     with arcpy.da.SearchCursor(self.shapefile, self.fields) as cur:
                         for row in cur:
-                            row = row[0:-1] + row[-1]
+                            lon, lat = row[-1]
+                            coords = (lat, lon)
+                            row = row[0:-1] + coords
                             writer.writerow(row)
                     return True
 
@@ -122,7 +124,6 @@ class Export:
 
     def md(self):
         install_dir = arcpy.GetInstallInfo('desktop')['InstallDir']
-        # TODO: make sure translator file exists on the machine
         translator = install_dir + 'Metadata\\Translator\\ARCGIS2FGDC.xml'
         if not os.path.isfile(translator):
             AddMessage('Unable to export Markdown metadata file, ' +
