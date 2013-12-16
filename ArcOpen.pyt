@@ -1,4 +1,3 @@
-#from convert import Convert
 import arcpy, os, shutil
 from export import Export
 from esri2open import esri2open
@@ -10,13 +9,15 @@ class Toolbox(object):
         self.alias = 'ArcOpen'
         self.tools = [Convert]
 
+
 class Convert(object):
     def __init__(self):
         self.label = 'Convert'
-        self.description = 'Convert an ArcGIS feature class to GeoJSON, KMZ and CSV'
+        self.description = 'Convert an ArcGIS feature class to open formats'
         self.canRunInBackground = False
 
     def getParameterInfo(self):
+        """Define the parameters of the tool"""
         feature_class = arcpy.Parameter(
             name = 'in_features',
             displayName = 'In Features',
@@ -97,7 +98,12 @@ class Convert(object):
         return True
 
     def updateParameters(self, params):
+        """Validate user input"""
 
+        """
+        If the input feature class is not point features, disable
+        CSV export
+        """
         if params[0].valueAsText:
             fc_type = arcpy.Describe(params[0].valueAsText).shapeType
             if fc_type in ['Point', 'MultiPoint']:
@@ -108,6 +114,12 @@ class Convert(object):
         return
 
     def checkFieldMappings(self, param):
+        """
+        Display warning message if any visible field is over 10 characters
+
+        Args:
+            param: the parameter that holds the field mappings
+        """
         field_mappings = param.value
         over_fields = []
         for idx, val in enumerate(range(field_mappings.count)):
@@ -123,29 +135,49 @@ class Convert(object):
         else:
             param.clearMessage()
 
-    def updateMessages(self, params):
+    def checkShapefileExists(self, dir, name):
+        """Display error message if shapefile already exists.
 
+        Args:
+            dir: the output directory
+            name: the output name
+        """
+        shapefile = dir.valueAsText + '\\shapefile\\' + name.valueAsText + '.shp'
+        if arcpy.Exists(shapefile):
+            name.setErrorMessage('A shapefile with this name already exists' +
+                                 ' in this directory. Either change the ' +
+                                 'name or directory or delete the ' +
+                                 'previously created shapefile.')
+        else:
+            name.clearMessage()
+
+
+    def updateMessages(self, params):
+        """Called after internal validation"""
+
+        """
+        Throws an error if a shapefile exists at the specified
+        directory and file name
+        """
         if params[2].value and params[2].altered:
             if params[3].value and params[3].altered:
-                shapefile = params[2].valueAsText + '\\shapefile\\' + params[3].valueAsText + '.shp'
-                if arcpy.Exists(shapefile):
-                    params[3].setErrorMessage('A shapefile with this name already exists' +
-                                              ' in this directory. Either change the name' +
-                                              ' or directory or delete the previously ' +
-                                              'created shapefile.')
-                else:
-                    params[3].clearMessage()
+                self.checkShapefileExists(params[2], params[3])
 
-        # Throws a warning, not an error, if there is one or more visible
-        # output column names longer than 10 characters. ArcGIS will abbreviate
-        # these columns if they aren't changed or hidden. This behavior may be
-        # ok with the user, thus why we are only warning.
+        """
+        Throws a warning, not an error, if there is one or more visible
+        output column names longer than 10 characters. ArcGIS will abbreviate
+        these columns if they aren't changed or hidden. This behavior may be
+        ok with the user, thus why we are only warning.
+        """
         if params[1].value:
             self.checkFieldMappings(params[1])
 
         return
 
     def execute(self, parameters, messages):
+        """Runs the script"""
+
+        # Get the user's input
         fc = parameters[0].valueAsText
         field_mappings = parameters[1].valueAsText
         fields = parameters[1].valueAsText.split(';')
@@ -159,6 +191,7 @@ class Convert(object):
         convert_metadata = bool(parameters[8].valueAsText)
         debug = bool(parameters[9].valueAsText)
 
+        # Setup vars
         output_path = output_dir + '\\' + output_name
         shp_output_path = output_dir + '\\shapefile'
         shp_temp_output_path = output_dir + '\\shapefile\\temp\\'
@@ -173,7 +206,8 @@ class Convert(object):
             arcpy.Delete_management('temp_layer')
         except:
             if debug:
-                messages.addMessage('Did not have a temp_layer feature class to delete')
+                messages.addMessage('Did not have a temp_layer feature ' +
+                                    'class to delete')
 
         if not os.path.exists(shp_output_path):
             os.makedirs(shp_output_path)
@@ -189,10 +223,13 @@ class Convert(object):
                     if os.path.isfile(file_path):
                         os.unlink(file_path)
                 except:
-                    messages.addWarningMessage('Unable to delete ' + file + 'from the temp folder. This may become a problem later')
+                    messages.addWarningMessage('Unable to delete ' + file +
+                                               'from the temp folder. This ' +
+                                               'may become a problem later')
                     pass
 
-        arcpy.MakeFeatureLayer_management(fc, 'temp_layer', '', '', field_mappings)
+        arcpy.MakeFeatureLayer_management(fc, 'temp_layer', '', '',
+                                          field_mappings)
         arcpy.CopyFeatures_management('temp_layer', temp_shapefile)
 
         if convert_to_wgs84:
@@ -201,7 +238,8 @@ class Convert(object):
             messages.addMessage('Projection conversion completed.')
         else:
             messages.addMessage('Exporting shapefile already in WGS84...')
-            arcpy.FeatureClassToShapefile_conversion(temp_shapefile, shp_output_path)
+            arcpy.FeatureClassToShapefile_conversion(temp_shapefile,
+                                                     shp_output_path)
 
         try:
             arcpy.Delete_management('temp_layer')
@@ -219,7 +257,8 @@ class Convert(object):
         if convert_to_geojson:
             messages.addMessage('Converting to GeoJSON...')
             output = output_path + '.geojson'
-            geojson = esri2open.toOpen(shapefile, output, includeGeometry='geojson')
+            geojson = esri2open.toOpen(shapefile, output,
+                                       includeGeometry='geojson')
             if geojson:
                 messages.addMessage('Finished converting to GeoJSON')
 
@@ -236,14 +275,17 @@ class Convert(object):
                 messages.addMessage('Finished converting to CSV')
 
         if convert_metadata:
-            messages.addMessage('Converting metadata to Markdown README.md file...')
+            messages.addMessage('Converting metadata to Markdown ' +
+                                'README.md file...')
             md = export.md()
             if md:
-                messages.addMessage('Finished converting metadata to Markdown README.md file')
+                messages.addMessage('Finished converting metadata to ' +
+                                    'Markdown README.md file')
 
         # Delete the /temp directory because we're done with it
         shutil.rmtree(shp_output_path + '\\temp')
         if (debug):
-            messages.addMessage('Deleted the /temp folder because we don\'t need it anymore')
+            messages.addMessage('Deleted the /temp folder because we don\'t' +
+                                'need it anymore')
 
         return

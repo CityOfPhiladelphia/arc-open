@@ -4,8 +4,14 @@ from xml.dom.minidom import parse
 
 
 class Export:
-
+    """
+    Main class that exports CSV, KMZ, ZIP archive, Markdown metadata file.
+    """
     def __init__(self, path, output_name, debug):
+        """
+        Inits Export instance with necessary paths and input data
+        information
+        """
         self.path = path
         self.output_name = output_name
         self.full_path = self.path + '\\' + self.output_name
@@ -27,7 +33,6 @@ class Export:
         return '# ' + title
 
     def _print_data_dict(self, fields):
-
         md = '### Data Dictionary\n\n'
         md += '| Field | Description  \n'
         md += '| ----- | :----------:  \n'
@@ -72,7 +77,8 @@ class Export:
                     return True
 
             else:
-                AddMessage('Sorry, converting layers of geometry type ' + shapefile_type + ' is not supported.')
+                AddMessage('Sorry, converting layers of geometry type ' +
+                           shapefile_type + ' is not supported.')
                 return False
 
         except Exception as err:
@@ -80,19 +86,25 @@ class Export:
             return False
 
     def zip(self):
-        match = self.path + '\\shapefile\\' + self.output_name + '.*'
-        zip_file = self.path + '\\shapefile\\' + self.output_name + '.zip'
+        try:
+            match = self.path + '\\shapefile\\' + self.output_name + '.*'
+            zip_file = self.path + '\\shapefile\\' + self.output_name + '.zip'
 
-        files = glob.glob(match)
-        zf = zipfile.ZipFile(zip_file, mode='w')
-        for file in files:
-            try:
-                zf.write(file, compress_type=zipfile.ZIP_DEFLATED, arcname=os.path.basename(file))
-            except:
-                AddMessage('Could not include ' + file + ' in .zip archive!')
-                return False
-        zf.close()
-        return True
+            files = glob.glob(match)
+            zf = zipfile.ZipFile(zip_file, mode='w')
+            for file in files:
+                try:
+                    zf.write(file,
+                             compress_type=zipfile.ZIP_DEFLATED,
+                             arcname=os.path.basename(file))
+                except:
+                    AddMessage('Could not include ' + file + ' in .zip archive!')
+                    return False
+            zf.close()
+            return True
+        except Exception as err:
+            AddMessage('Unable to export ZIP archive: ' + str(err))
+            return False
 
     def kmz(self):
         kmz_file = self.full_path + '.kmz'
@@ -100,7 +112,9 @@ class Export:
         if arcpy.Exists(kmz_file):
             arcpy.Delete_management(kmz_file)
         try:
-            arcpy.LayerToKML_conversion(self.output_name, kmz_file, '', '', self.output_name, '1024', '96', 'CLAMPED_TO_GROUND')
+            arcpy.LayerToKML_conversion(self.output_name, kmz_file, '',
+                                        '', self.output_name, '1024', '96',
+                                        'CLAMPED_TO_GROUND')
             return True
         except Exception as err:
             AddMessage('Unable to export KMZ file: ' + str(err))
@@ -110,6 +124,10 @@ class Export:
         install_dir = arcpy.GetInstallInfo('desktop')['InstallDir']
         # TODO: make sure translator file exists on the machine
         translator = install_dir + 'Metadata\\Translator\\ARCGIS2FGDC.xml'
+        if not os.path.isfile(translator):
+            AddMessage('Unable to export Markdown metadata file, ' +
+                       'the XML translator file does not exist.')
+            return False
         metadata = self.path + '\\shapefile\\temp\\README.xml'
         arcpy.ESRITranslator_conversion(self.shapefile, translator, metadata)
 
@@ -123,12 +141,10 @@ class Export:
         ]
         self.source = self._load(metadata)
         metadata_fields = copy.deepcopy(self.fields)
-        AddMessage(metadata_fields)
         try:
             metadata_fields.remove('SHAPE@XY')
         except:
             pass
-        AddMessage(metadata_fields)
         self.markdown = ''
 
         self.markdown = self._print_title(self.source)
@@ -151,7 +167,3 @@ class Export:
             return False
         finally:
             md_file.close()
-
-
-
-
