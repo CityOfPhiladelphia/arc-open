@@ -8,7 +8,11 @@ Runs on ArcGIS 10.1+
 
 ### Installation
 
-Coming soon
+Download or git fork/clone
+
+### Usage
+
+From the GUI interface and from a Python script
 
 ### Demo
 
