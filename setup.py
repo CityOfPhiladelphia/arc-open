@@ -8,5 +8,5 @@ setup(name='ArcOpen',
 	    url='https://github.com/CityOfPhiladelphia/arc-open',
 	    packages=['arc_open'],
 	    package_dir={'arc_open': 'arc_open'},
-	    package_data={'arc_open': ['../*.md', 'esri/toolboxes/*.*', './esri2open/*', 'esri/help/gp/toolboxes/*']}
+	    package_data={'arc_open': ['../*.md', 'esri/toolboxes/*.*', './esri2open/*']}
 	    )
