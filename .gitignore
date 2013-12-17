@@ -3,3 +3,5 @@ data
 *.zip
 *.pyc
 *.tmp
+build/
+dist/

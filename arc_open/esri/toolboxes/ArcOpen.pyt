@@ -1,4 +1,4 @@
-from convert import Convert
+from arc_open.convert import Convert
 
 
 class Toolbox(object):
