@@ -48,10 +48,11 @@ class Export:
             content = content.replace('\n', '  \n')
             md = '\n\n' + '### ' + title + '  \n\n'
             md += content
+            return md.encode('ascii', 'ignore')
         except:
-            pass
-
-        return md.encode('ascii', 'ignore')
+            AddMessage('Error printing ' + title + ' section. Does this ' +
+                       'section exist in your metadata?');
+            return ''
 
     def csv(self):
         shapefile_type = self.desc.shapeType
