@@ -54,6 +54,7 @@ class Convert(object):
             direction = 'Input',
             datatype = 'Boolean',
             parameterType = 'Optional')
+        convert_4326.value = 'True'
 
         convert_geojson = arcpy.Parameter(
             name = 'convert_geojson',
@@ -61,6 +62,7 @@ class Convert(object):
             direction = 'Input',
             datatype = 'Boolean',
             parameterType = 'Optional')
+        convert_geojson.value = 'True'
 
         convert_kmz = arcpy.Parameter(
             name = 'convert_kmz',
@@ -68,6 +70,7 @@ class Convert(object):
             direction = 'Input',
             datatype = 'Boolean',
             parameterType = 'Optional')
+        convert_kmz.value = 'True'
 
         convert_csv = arcpy.Parameter(
             name = 'convert_csv',
@@ -96,6 +99,10 @@ class Convert(object):
 
     def isLicensed(self):
         return True
+
+    def initializeParameters(self, params):
+        params[9].enabled = 0
+        return
 
     def updateParameters(self, params):
         """Validate user input"""
