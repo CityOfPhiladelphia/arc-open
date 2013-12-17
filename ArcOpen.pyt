@@ -100,10 +100,6 @@ class Convert(object):
     def isLicensed(self):
         return True
 
-    def initializeParameters(self, params):
-        params[9].enabled = 0
-        return
-
     def updateParameters(self, params):
         """Validate user input"""
 
@@ -129,16 +125,16 @@ class Convert(object):
         """
         field_mappings = param.value
         over_fields = []
+        fields_warning = ('The following visible field name(s) are' +
+                         ' over 10 characters and will be shortened' +
+                         ' automatically by ArcGIS: ')
         for idx, val in enumerate(range(field_mappings.count)):
             if field_mappings.getVisible(idx) == 'VISIBLE':
                 field = field_mappings.getNewName(idx)
                 if len(field) > 10:
                     over_fields.append(field)
         if over_fields:
-            param.setWarningMessage('The following visible field name(s) are' +
-                                    ' over 10 characters and will be ' +
-                                    'shortened automatically by ArcGIS: ' +
-                                    ", ".join(over_fields))
+            param.setWarningMessage(fields_warning + ", ".join(over_fields))
         else:
             param.clearMessage()
 
@@ -150,11 +146,12 @@ class Convert(object):
             name: the output name
         """
         shapefile = dir.valueAsText + '\\shapefile\\' + name.valueAsText + '.shp'
+        exists_error = ('A shapefile with this name already exists' +
+                        ' in this directory. Either change the name ' +
+                        'or directory or delete the previously created ' +
+                        'shapefile.')
         if arcpy.Exists(shapefile):
-            name.setErrorMessage('A shapefile with this name already exists' +
-                                 ' in this directory. Either change the ' +
-                                 'name or directory or delete the ' +
-                                 'previously created shapefile.')
+            name.setErrorMessage(exists_error)
         else:
             name.clearMessage()
 
