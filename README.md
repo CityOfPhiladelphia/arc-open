@@ -2,7 +2,7 @@
 
 ArcOpen is an ArcGIS Desktop Python toolbox that makes exporting ArcGIS feature classes to open geodata formats (GeoJSON, KML, CSV and more) a breeze. It'll even create a Markdown `README.md` file for you from your layer's metadata!
 
-Special thanks to [Project Open Data])(https://github.com/project-open-data)'s for [esri2open](https://github.com/project-open-data/esri2open) which is used for creating the GeoJSON  
+Special thanks to [Project Open Data](https://github.com/project-open-data)'s for [esri2open](https://github.com/project-open-data/esri2open) which is used for creating the GeoJSON.  
 
 Runs on ArcGIS 10.1+
 
