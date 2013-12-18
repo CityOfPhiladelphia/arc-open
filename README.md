@@ -80,4 +80,4 @@ If you make changes and want to rebuild the installer, run this in the root of t
     python setup.py bdist_wininst
 
 ### Issues
-Questions or ideas? Feel free to [submit an issue](https://github.com/CityOfPhiladelphia/arc-open/issues/new). If you're thinking about submitting a pull request, talk to us first because we can't guarantee that we'll accept every pull request because if it doesn't meet our requirements for this tool. With that being said, please feel free to fork and edit as you'd like.
+Questions or ideas? Feel free to [submit an issue](https://github.com/CityOfPhiladelphia/arc-open/issues/new). If you're thinking about submitting a pull request. talk to us first - we can't guarantee that we'll accept every pull request if it doesn't meet our requirements for this tool. With that being said, feel free to fork and edit as you'd like!
