@@ -10,7 +10,7 @@ Special thanks to [Project Open Data](https://github.com/project-open-data)'s fo
 
 There are a few ways that the toolbox can be installed besides the regular `git clone\fork`
 
-* If you are using ArcGIS 10.1, [download the ZIP archive of the source code](https://github.com/CityOfPhiladelphia/arc-open/archive/v1.0.zip) and extract it somewhere on your machine. In Desktop or Catalog, open the ArcToolbox window and add the `ArcOpen.pyt` file as a new toolbox.  
+* If you are using ArcGIS 10.1, [download the ZIP archive of the source code](https://github.com/CityOfPhiladelphia/arc-open/archive/v1.0.zip) and extract it somewhere on your machine. In Desktop or Catalog, open the ArcToolbox window and add the `arc-open/arc_open/esri/toolboxes/ArcOpen.pyt` file as a new toolbox.  
 
 Please do not add the toolbox in your ArcToolbox and save the settings to the default location, *this may be cause ArcGIS to crash on future launches*! If you do this anyway, navigate to `%APPDATA%\Roaming\ESRI\Desktop10.x\ArcToolbox` and rename the `ArcToolbox.dat` file. On next launch of the application it should recreate this file with the factory settings. Perhaps there's a way around this but we haven't found one yet. You have been warned!
 
