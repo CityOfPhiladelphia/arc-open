@@ -10,7 +10,7 @@ Special thanks to [Project Open Data](https://github.com/project-open-data)'s fo
 
 There are a few ways that the toolbox can be installed besides the regular `git clone\fork`
 
-* If you are using ArcGIS 10.1, [download the ZIP archive of the source code](https://github.com/CityOfPhiladelphia/arc-open/archive/v1.0.zip) and extract it somewhere on your machine. In Desktop or Catalog, open the ArcToolbox window and add the ArcOpen.pyt file as a new toolbox.  
+* If you are using ArcGIS 10.1, [download the ZIP archive of the source code](https://github.com/CityOfPhiladelphia/arc-open/archive/v1.0.zip) and extract it somewhere on your machine. In Desktop or Catalog, open the ArcToolbox window and add the `ArcOpen.pyt` file as a new toolbox.  
 
 Please do not add the toolbox in your ArcToolbox and save the settings to the default location, *this may be cause ArcGIS to crash on future launches*! If you do this anyway, navigate to `%APPDATA%\Roaming\ESRI\Desktop10.x\ArcToolbox` and rename the `ArcToolbox.dat` file. On next launch of the application it should recreate this file with the factory settings. Perhaps there's a way around this but we haven't found one yet. You have been warned!
 
@@ -72,5 +72,12 @@ Convert_ArcOpen('path/or/db/connection/to/farmers_markets',
                 'c:/github_data', 'farmers_markets', 'true', 'true',
                 'true', 'true', 'true', 'false'))
 ```
+
+### Development
+
+If you make changes and want to rebuild the installer, run this in the root of the project:
+
+    python setup.py bdist_wininst
+
 ### Issues
 Questions or ideas? Feel free to [submit an issue](https://github.com/CityOfPhiladelphia/arc-open/issues/new). If you're thinking about submitting a pull request, talk to us first because we can't guarantee that we'll accept every pull request because if it doesn't meet our requirements for this tool. With that being said, please feel free to fork and edit as you'd like.
