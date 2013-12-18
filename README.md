@@ -51,15 +51,3 @@ You can also use the tool from within a Python script. If the toolbox is loaded 
 
 ### Issues
 Questions or requests? Feel free to [submit an issue](https://github.com/CityOfPhiladelphia/arc-open/issues/new). If you're thinking about submitting a pull request, talk to us first because we can't guarantee that we'll accept every pull request because if it doesn't meet our requirements for this tool. With that being said, please feel free to fork and edit as you'd like.
-
-### License
-
-Copyright (c) 2013, City of Philadelphia All rights reserved.
-
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-* Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-* Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-* Neither the name of the City of Philadelphia nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.  
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
