@@ -4,7 +4,7 @@ ArcOpen is an ArcGIS Desktop Python toolbox that makes exporting ArcGIS feature 
 
 Special thanks to [Project Open Data](https://github.com/project-open-data)'s for [esri2open](https://github.com/project-open-data/esri2open) which is used for creating the GeoJSON.  
 
-**Runs on ArcGIS 10.1+**
+**Requires ArcGIS 10.1 SP1 or above**
 
 ### Installation
 
