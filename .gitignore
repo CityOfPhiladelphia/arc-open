@@ -4,4 +4,3 @@ data
 *.pyc
 *.tmp
 build/
-dist/
