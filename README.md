@@ -8,13 +8,11 @@ Special thanks to [Project Open Data](https://github.com/project-open-data)'s fo
 
 ### Installation
 
-There are a few ways that the toolbox can be installed besides the regular `git clone\fork`
+* **ArcGIS 10.1**: Run the `.exe` installer from either a regular `git clone/fork` or from downloading it from the [Releases](https://github.com/CityOfPhiladelphia/arc-open/releases) page. In Desktop or Catalog, open the ArcToolbox window and add the `%PYTHON_INSTALL_DIR%/Lib/site-packages/arc-open/arc_open/esri/toolboxes/ArcOpen.pyt` file as a new toolbox.  
 
-* If you are using ArcGIS 10.1, [download the ZIP archive of the source code](https://github.com/CityOfPhiladelphia/arc-open/archive/v1.0.zip) and extract it somewhere on your machine. In Desktop or Catalog, open the ArcToolbox window and add the `arc-open/arc_open/esri/toolboxes/ArcOpen.pyt` file as a new toolbox.  
+Please do not add the toolbox in your ArcToolbox and save the settings to the default location, *this may cause ArcGIS to crash on future launches*! If you do this anyway, navigate to `%APPDATA%\Roaming\ESRI\Desktop10.x\ArcToolbox` and rename the `ArcToolbox.dat` file. On next launch of the application it should recreate this file with the factory settings. Perhaps there's a way around this but we haven't found one yet. You have been warned!  
 
-Please do not add the toolbox in your ArcToolbox and save the settings to the default location, *this may be cause ArcGIS to crash on future launches*! If you do this anyway, navigate to `%APPDATA%\Roaming\ESRI\Desktop10.x\ArcToolbox` and rename the `ArcToolbox.dat` file. On next launch of the application it should recreate this file with the factory settings. Perhaps there's a way around this but we haven't found one yet. You have been warned!
-
-* If you're using ArcGIS 10.2, it's a lot easier for you. Simply [download the .exe installer](https://github.com/CityOfPhiladelphia/arc-open/releases/download/v1.0/ArcOpen-1.0.0.exe) and run it to install the toolbox as a Python module (using Python's [Distutils](http://blogs.esri.com/esri/arcgis/2013/08/13/extending-geoprocessing-through-python-modules/)). The toolbox is now automagically added as a new System Toolbox.
+* **ArcGIS 10.2**: Run the `.exe` installer just like you would for 10.1. The toolbox is now automagically added as a new System Toolbox.
 
 ### Usage
 
