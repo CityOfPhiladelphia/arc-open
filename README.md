@@ -54,18 +54,18 @@ For example:
 import arcpy
 # You'll have to import it into the arcpy namespace first
 arcpy.ImportToolbox('path/to/ArcOpen.pyt') 
-Convert_ArcOpen('path/or/db/connection/to/farmers_markets',
-                'OBJECTID OBJECTID HIDDEN NONE;
-                NAME NAME VISIBLE NONE;
-                ADDRESS ADDRESS VISIBLE NONE;
-                OPERATOR OPERATOR VISIBLE NONE;
-                ACCEPT_SNA SNA VISIBLE NONE;
-                ACCEPT_FMN FMN VISIBLE NONE;
-                DISTRIBUTE DISTRIBUTE VISIBLE NONE;
-                ONLY_REDEE REDEEM VISIBLE NONE;
-                EBT_MACHIN EBT VISIBLE NONE;
-                DAY_TIME DAY_TIME VISIBLE NONE;
-                ZIP_CODE ZIP_CODE VISIBLE NONE;
+arcpy.Convert_ArcOpen('path/or/db/connection/to/farmers_markets',
+                'OBJECTID OBJECTID HIDDEN NONE; \
+                NAME NAME VISIBLE NONE; \
+                ADDRESS ADDRESS VISIBLE NONE; \
+                OPERATOR OPERATOR VISIBLE NONE; \
+                ACCEPT_SNA SNA VISIBLE NONE; \
+                ACCEPT_FMN FMN VISIBLE NONE; \
+                DISTRIBUTE DISTRIBUTE VISIBLE NONE; \
+                ONLY_REDEE REDEEM VISIBLE NONE; \
+                EBT_MACHIN EBT VISIBLE NONE; \
+                DAY_TIME DAY_TIME VISIBLE NONE; \
+                ZIP_CODE ZIP_CODE VISIBLE NONE; \
                 SHAPE SHAPE HIDDEN NONE',
                 'c:/github_data', 'farmers_markets', 'true', 'true',
                 'true', 'true', 'true', 'false'))
