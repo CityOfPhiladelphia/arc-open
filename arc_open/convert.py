@@ -1,4 +1,5 @@
 import arcpy, os, shutil
+from arcpy import AddMessage, AddWarning, AddError
 from export import Export
 from esri2open import esri2open
 
@@ -196,20 +197,20 @@ class Convert(object):
         temp_shapefile = shp_output_path + '\\temp\\' + output_name + '.shp'
 
         if debug:
-            messages.addMessage('Field infos:')
-            messages.addMessage(field_mappings)
+            AddMessage('Field infos:')
+            AddMessage(field_mappings)
 
         try:
             arcpy.Delete_management('temp_layer')
         except:
             if debug:
-                messages.addMessage('Did not have a temp_layer feature ' +
+                AddMessage('Did not have a temp_layer feature ' +
                                     'class to delete')
 
         if not os.path.exists(shp_output_path):
             os.makedirs(shp_output_path)
             if debug:
-                messages.addMessage('Created directory ' + shp_output_path)
+                AddMessage('Created directory ' + shp_output_path)
 
         if not os.path.exists(shp_temp_output_path):
             os.makedirs(shp_temp_output_path)
@@ -220,9 +221,9 @@ class Convert(object):
                     if os.path.isfile(file_path):
                         os.unlink(file_path)
                 except:
-                    messages.addWarningMessage('Unable to delete ' + file +
-                                               'from the temp folder. This ' +
-                                               'may become a problem later')
+                    AddWarning('Unable to delete ' + file +
+                                      'from the temp folder. This ' +
+                                      'may become a problem later')
                     pass
 
         arcpy.MakeFeatureLayer_management(fc, 'temp_layer', '', '',
@@ -230,59 +231,62 @@ class Convert(object):
         arcpy.CopyFeatures_management('temp_layer', temp_shapefile)
 
         if convert_to_wgs84:
-            messages.addMessage('Converting spatial reference to WGS84...')
+            AddMessage('Converting spatial reference to WGS84...')
             arcpy.Project_management(temp_shapefile, shapefile, "GEOGCS['GCS_WGS_1984',DATUM['D_WGS_1984',SPHEROID['WGS_1984',6378137.0,298.257223563]],PRIMEM['Greenwich',0.0],UNIT['Degree',0.0174532925199433],METADATA['World',-180.0,-90.0,180.0,90.0,0.0,0.0174532925199433,0.0,1262]]", "WGS_1984_(ITRF00)_To_NAD_1983", "PROJCS['NAD_1983_StatePlane_Pennsylvania_South_FIPS_3702_Feet',GEOGCS['GCS_North_American_1983',DATUM['D_North_American_1983',SPHEROID['GRS_1980',6378137.0,298.257222101]],PRIMEM['Greenwich',0.0],UNIT['Degree',0.0174532925199433]],PROJECTION['Lambert_Conformal_Conic'],PARAMETER['False_Easting',1968500.0],PARAMETER['False_Northing',0.0],PARAMETER['Central_Meridian',-77.75],PARAMETER['Standard_Parallel_1',39.93333333333333],PARAMETER['Standard_Parallel_2',40.96666666666667],PARAMETER['Latitude_Of_Origin',39.33333333333334],UNIT['Foot_US',0.3048006096012192]]")
-            messages.addMessage('Projection conversion completed.')
+            AddMessage('Projection conversion completed.')
         else:
-            messages.addMessage('Exporting shapefile already in WGS84...')
+            AddMessage('Exporting shapefile already in WGS84...')
             arcpy.FeatureClassToShapefile_conversion(temp_shapefile,
                                                      shp_output_path)
 
         try:
             arcpy.Delete_management('temp_layer')
         except:
-            messages.addErrorMessage('Unable to delete in_memory feature class')
+            AddError('Unable to delete in_memory feature class')
 
-        messages.addMessage('Compressing the shapefile to a .zip file...')
+        AddMessage('Compressing the shapefile to a .zip file...')
 
         export = Export(output_dir, output_name, debug)
 
         zip = export.zip()
         if zip:
-            messages.addMessage('Finished creating ZIP archive')
+            AddMessage('Finished creating ZIP archive')
 
         if convert_to_geojson:
-            messages.addMessage('Converting to GeoJSON...')
+            AddMessage('Converting to GeoJSON...')
             output = output_path + '.geojson'
             geojson = esri2open.toOpen(shapefile, output,
                                        includeGeometry='geojson')
             if geojson:
-                messages.addMessage('Finished converting to GeoJSON')
+                AddMessage('Finished converting to GeoJSON')
+
+        AddMessage(parameters[6].valueAsText)
+        AddMessage(convert_to_kmz)
 
         if convert_to_kmz:
-            messages.addMessage('Converting to KML...')
+            AddMessage('Converting to KML...')
             kmz = export.kmz()
             if kmz:
-                messages.addMessage('Finished converting to KMZ')
+                AddMessage('Finished converting to KMZ')
 
         if convert_to_csv:
-            messages.addMessage('Converting to CSV...')
+            AddMessage('Converting to CSV...')
             csv = export.csv()
             if csv:
-                messages.addMessage('Finished converting to CSV')
+                AddMessage('Finished converting to CSV')
 
         if convert_metadata:
-            messages.addMessage('Converting metadata to Markdown ' +
+            AddMessage('Converting metadata to Markdown ' +
                                 'README.md file...')
             md = export.md()
             if md:
-                messages.addMessage('Finished converting metadata to ' +
+                AddMessage('Finished converting metadata to ' +
                                     'Markdown README.md file')
 
         # Delete the /temp directory because we're done with it
         shutil.rmtree(shp_output_path + '\\temp')
         if (debug):
-            messages.addMessage('Deleted the /temp folder because we don\'t' +
-                                'need it anymore')
+            AddMessage('Deleted the /temp folder because we don\'t' +
+                                ' need it anymore')
 
         return

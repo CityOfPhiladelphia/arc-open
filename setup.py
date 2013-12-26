@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(name='ArcOpen',
-	    version='1.0.0',
+	    version='1.0.1',
 	    description='An ArcGIS toolbox to convert feature classes to open geodata formats',
 	    author='City of Philadelphia',
 	    author_email='data@phila.gov',
