@@ -6,6 +6,8 @@ Special thanks to [Project Open Data](https://github.com/project-open-data)'s fo
 
 **Requires ArcGIS 10.1 SP1 or above**
 
+**This tool is still under active development and breaking changes may be introduced in the future**
+
 ### Installation
 
 * **ArcGIS 10.1**: Run the `.exe` installer from either a regular `git clone/fork` or from downloading it from the [Releases](https://github.com/CityOfPhiladelphia/arc-open/releases) page. In Desktop or Catalog, open the ArcToolbox window and add the `%PYTHON_INSTALL_DIR%/Lib/site-packages/arc-open/arc_open/esri/toolboxes/ArcOpen.pyt` file as a new toolbox.  
@@ -67,8 +69,9 @@ arcpy.Convert_ArcOpen('path/or/db/connection/to/farmers_markets',
                 DAY_TIME DAY_TIME VISIBLE NONE; \
                 ZIP_CODE ZIP_CODE VISIBLE NONE; \
                 SHAPE SHAPE HIDDEN NONE',
-                'c:/github_data', 'farmers_markets', 'true', 'true',
-                'true', 'true', 'true', 'false'))
+                'c:/github_data', 'farmers_markets', convert_4326='true',  
+                convert_geojson='true', convert_kmz='true', convert_csv='true',  
+                convert_metadata='true', debug='false')
 ```
 
 ### Development

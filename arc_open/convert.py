@@ -46,7 +46,7 @@ class Convert(object):
             name = 'convert_4326',
             displayName = 'Convert to WGS84?',
             direction = 'Input',
-            datatype = 'Boolean',
+            datatype = 'GPBoolean',
             parameterType = 'Optional')
         convert_4326.value = 'True'
 
@@ -54,7 +54,7 @@ class Convert(object):
             name = 'convert_geojson',
             displayName = 'Convert to GeoJSON?',
             direction = 'Input',
-            datatype = 'Boolean',
+            datatype = 'GPBoolean',
             parameterType = 'Optional')
         convert_geojson.value = 'True'
 
@@ -62,7 +62,7 @@ class Convert(object):
             name = 'convert_kmz',
             displayName = 'Convert to KMZ?',
             direction = 'Input',
-            datatype = 'Boolean',
+            datatype = 'GPBoolean',
             parameterType = 'Optional')
         convert_kmz.value = 'True'
 
@@ -70,21 +70,21 @@ class Convert(object):
             name = 'convert_csv',
             displayName = 'Convert to CSV?',
             direction = 'Input',
-            datatype = 'Boolean',
+            datatype = 'GPBoolean',
             parameterType = 'Optional')
 
         convert_metadata = arcpy.Parameter(
             name = 'convert_metadata',
             displayName = 'Convert metadata to markdown?',
             direction = 'Input',
-            datatype = 'Boolean',
+            datatype = 'GPBoolean',
             parameterType = 'Optional')
 
         debug = arcpy.Parameter(
             name = 'debug',
             displayName = 'Debug',
             direction = 'Input',
-            datatype = 'Boolean',
+            datatype = 'GPBoolean',
             parameterType = 'Optional')
 
         return [feature_class, field_mappings, output_dir, output_name,
@@ -172,6 +172,13 @@ class Convert(object):
 
         return
 
+    def toBool(self, value):
+            """Casts the user's input to a boolean type"""
+            if value == 'true':
+                return True
+            else:
+                return False
+
     def execute(self, parameters, messages):
         """Runs the script"""
 
@@ -182,12 +189,12 @@ class Convert(object):
         fields.append('SHAPE@XY')
         output_dir = parameters[2].valueAsText
         output_name = parameters[3].valueAsText
-        convert_to_wgs84 = bool(parameters[4].valueAsText)
-        convert_to_geojson = bool(parameters[5].valueAsText)
-        convert_to_kmz = bool(parameters[6].valueAsText)
-        convert_to_csv = bool(parameters[7].valueAsText)
-        convert_metadata = bool(parameters[8].valueAsText)
-        debug = bool(parameters[9].valueAsText)
+        convert_to_wgs84 = self.toBool(parameters[4].valueAsText)
+        convert_to_geojson = self.toBool(parameters[5].valueAsText)
+        convert_to_kmz = self.toBool(parameters[6].valueAsText)
+        convert_to_csv = self.toBool(parameters[7].valueAsText)
+        convert_metadata = self.toBool(parameters[8].valueAsText)
+        debug = self.toBool(parameters[9].valueAsText)
 
         # Setup vars
         output_path = output_dir + '\\' + output_name
@@ -259,9 +266,6 @@ class Convert(object):
                                        includeGeometry='geojson')
             if geojson:
                 AddMessage('Finished converting to GeoJSON')
-
-        AddMessage(parameters[6].valueAsText)
-        AddMessage(convert_to_kmz)
 
         if convert_to_kmz:
             AddMessage('Converting to KML...')
