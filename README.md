@@ -45,6 +45,8 @@ The tool will export the requested files in the following structure:
 
 **A note about metadata**: the tool uses the `ARCGIS2FGDC.xml` translator XML file included with ArcGIS installs to pull out the "Summary", "Description", "Credits" and "Use Limitations" sections of your metadata. It also adds a "Data Dictionary" section to the exported `README.md` file with the beginnings of a Markdown table of your exported fields for you to finish. You will mostly definitely need to edit your `README.md` before publishing as the export is not perfect.  
 
+**A few notes about pushing shapefiles to GitHub**: Make sure to include `*.lock` in your `.gitignore` file so that can easily commit to GitHub. Also the [GitHub file size limit](https://help.github.com/articles/working-with-large-files) is 100 MB so you may run into occasions where you can only store the zipped shapefile in your remote.  
+
 You can also use the tool from within a Python script:
 
 ```python
